@@ -2,6 +2,18 @@
 
 ⏱ estimated time: TODO
 
+## What you'll build
+
+TODO: diagram highlighting the load testing client
+
+## Part A: Deploy load testing client
+
+- TODO: manifests for load testing client in infra repo
+
+## Part B: Run load test and analyze results
+
+- TODO: instructions for running a load test and seeing results
+
 ## Part C: Cleanup
 
 ```sh

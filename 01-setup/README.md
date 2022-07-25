@@ -103,5 +103,6 @@ kubectl get all --all-namespaces
 
 ### Deploy subgraphs
 
+- TODO: add github secrets to subgraph-a and subgraph-b repos for kube cluster access
 - TODO: trigger deploy workflows (dev and prod)
 - TODO: try them out over nodeports
