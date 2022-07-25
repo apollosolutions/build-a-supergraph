@@ -12,9 +12,12 @@ TODO: complete diagram
 
 ## Contents
 
+⏱ estimated time: TODO
+💰 estimated cost: TODO
+
 ### [Step 1: Setup](/01-setup)
 
-- Part A: Assemble accounts and credentials
+- Part A: Gather accounts and credentials
 - Part B: Provision resources
 - Part C: Deploy applications
 
