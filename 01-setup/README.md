@@ -36,13 +36,20 @@ cd build-a-supergraph
     - `delete-repo` (for cleanup at the end)
 
 ```sh
+export PROJECT_ID="<your-project-id>"
+
 gcloud components update
+gcloud components install gke-gcloud-auth-plugin
 gcloud auth application-default login
 # expected output:
 # > Credentials saved to file: [/Users/you/.config/gcloud/application_default_credentials.json]
 
-export PROJECT=$(gcloud config get-value project)
-gcloud projects list --filter="$PROJECT" --format="value(PROJECT_NUMBER)"
+gcloud config set project ${PROJECT_ID}
+gcloud services enable \
+  container.googleapis.com \
+  secretmanager.googleapis.com \
+  cloudasset.googleapis.com \
+  storage.googleapis.com
 ```
 
 ### Setup terraform variables
@@ -54,7 +61,7 @@ github_token = ""
 github_username = ""
 github_email = ""
 project_id = ""
-project_number = ""
+project_region = "us-east1"
 ```
 
 ## Part B: Provision resources
@@ -66,10 +73,30 @@ project_number = ""
 ### Create Kubernetes clusters
 
 ```sh
-terraform init
+cd 01-setup
+terraform init # 2 minutes
 terraform plan
-terraform apply
+terraform apply # will prompt for confirmation
 # takes 8 minutes
+```
+
+### Setup kubectl
+
+```sh
+gcloud container clusters get-credentials apollo-supergraph-k8s-dev --zone us-east1 --project $PROJECT_ID
+
+kubectl config rename-context gke_$PROJECT_ID_us-east1_apollo-supergraph-k8s-dev supergraph-dev
+
+gcloud container clusters get-credentials apollo-supergraph-k8s-prod --zone us-east1 --project $PROJECT_ID
+
+kubectl config rename-context gke_$PROJECT_ID_us-east1_apollo-supergraph-k8s-prod supergraph-prod
+```
+
+Now you can inspect your clusters with
+
+```sh
+kubectl config set-context supergraph-dev
+kubectl get all --all-namespaces
 ```
 
 ## Part C: Deploy applications
