@@ -85,11 +85,11 @@ terraform apply # will prompt for confirmation
 ```sh
 gcloud container clusters get-credentials apollo-supergraph-k8s-dev --zone us-east1 --project $PROJECT_ID
 
-kubectl config rename-context gke_$PROJECT_ID_us-east1_apollo-supergraph-k8s-dev supergraph-dev
+kubectl config rename-context gke_${PROJECT_ID}_us-east1_apollo-supergraph-k8s-dev supergraph-dev
 
 gcloud container clusters get-credentials apollo-supergraph-k8s-prod --zone us-east1 --project $PROJECT_ID
 
-kubectl config rename-context gke_$PROJECT_ID_us-east1_apollo-supergraph-k8s-prod supergraph-prod
+kubectl config rename-context gke_${PROJECT_ID}_us-east1_apollo-supergraph-k8s-prod supergraph-prod
 ```
 
 Now you can inspect your clusters with
