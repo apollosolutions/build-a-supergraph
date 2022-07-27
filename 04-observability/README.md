@@ -4,7 +4,7 @@
 
 ## What you'll build
 
-TODO: diagram highlighting otel collector, prometheus, zipkin, and studio
+![Architecture diagram of the supergraph](diagram.png)
 
 ## Part A: Setup Open Telemetry
 

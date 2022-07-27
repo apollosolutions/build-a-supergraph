@@ -4,7 +4,7 @@
 
 ## What you'll build
 
-TODO: diagram highlighting router, uplink/studio
+![Architecture diagram of the supergraph](diagram.png)
 
 ## Part A: Apollo Studio
 
