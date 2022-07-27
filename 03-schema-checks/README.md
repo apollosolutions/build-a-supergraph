@@ -4,7 +4,7 @@
 
 ## What you'll build
 
-TODO: diagram highlighting subgraph repos and studio
+![Architecture diagram of the supergraph](diagram.png)
 
 ## Part A: Schema checks on pull requests
 

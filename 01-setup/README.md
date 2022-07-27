@@ -4,7 +4,7 @@
 
 ## What you'll build
 
-TODO: diagram with just repos, clusters, and subgraphs
+![Architecture diagram of the supergraph](diagram.png)
 
 ## Part A: Gather accounts and credentials
 

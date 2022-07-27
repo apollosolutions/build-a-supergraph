@@ -4,7 +4,7 @@
 
 ## What you'll build
 
-TODO: diagram highlighting the load testing client
+![Architecture diagram of the supergraph](diagram.png)
 
 ## Part A: Deploy load testing client
 

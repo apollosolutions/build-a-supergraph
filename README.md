@@ -8,7 +8,7 @@ This repository contains the demos for the "Build a Supergraph" series. All you 
 
 ## What you'll build
 
-TODO: complete diagram
+![Architecture diagram of the supergraph](build-a-supergraph.png)
 
 ## Contents
 
