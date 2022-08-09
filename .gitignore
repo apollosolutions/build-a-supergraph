@@ -27,3 +27,4 @@ override.tf.json
 terraform.rc
 
 .DS_Store
+kubeconfig-*
