@@ -19,6 +19,8 @@ cd build-a-supergraph
 
 - [GCloud CLI](https://cloud.google.com/sdk/docs/install)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [kubectx](https://github.com/ahmetb/kubectx#installation)
 
 ### Gather accounts
 
@@ -62,6 +64,8 @@ github_username = ""
 github_email = ""
 project_id = ""
 project_region = "us-east1"
+apollo_key       = ""
+apollo_graph_ref = ""
 ```
 
 ## Part B: Provision resources

@@ -44,3 +44,11 @@ variable "demo_stages" {
     }
   ]
 }
+
+// apollo-specific variables used for secrets
+variable "apollo_key" {
+  description = "Apollo key for Router"
+}
+variable "apollo_graph_ref" {
+  description = "Apollo Graph Reference (graphref)"
+}

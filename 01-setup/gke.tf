@@ -28,6 +28,7 @@ module "gke" {
   regional                          = true
   region                            = var.project_region
   disable_legacy_metadata_endpoints = true
+  kubernetes_version                = "1.23" # Bug w/ 1.24: https://github.com/hashicorp/terraform-provider-kubernetes/pull/1792
 
   network           = module.gcp-network[each.key].network_name
   subnetwork        = module.gcp-network[each.key].subnets_names[0]
