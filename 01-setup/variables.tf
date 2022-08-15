@@ -16,6 +16,14 @@ variable "gke_num_nodes" {
   description = "number of gke nodes"
 }
 
+variable "router_port" {
+  description = "Apollo Router service port"
+}
+
+variable "router_port_name" {
+  description = "Apollo Router service port name"
+}
+
 // adding in IP info here to make it easier to manage.
 // due to the peering needed to support a shared tooling-infra cluster (for uploading metrics), each subnet cannot conflict; giving each range a healthy /16 avoids potential
 // IP exhaustion for the demo.
