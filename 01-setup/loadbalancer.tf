@@ -1,9 +1,12 @@
 module "gce-lb-http" {
   source            = "GoogleCloudPlatform/lb-http/google//modules/dynamic_backends"
   version           = "~> 4.4"
+  for_each = {
+    for index, stage in var.demo_stages : stage.name => stage
+  }
 
   project           = var.project_id
-  name              = "${var.demo_name}-lb"
+  name              = "${var.demo_name}-${each.value.name}-lb"
   target_tags       = [module.mig1.target_tags, module.mig2.target_tags]
   backends = {
     default = {

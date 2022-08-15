@@ -17,11 +17,13 @@ variable "gke_num_nodes" {
 }
 
 variable "router_port" {
-  description = "Apollo Router service port"
+  default = 80
+  description = "Apollo Router service NodePort port number"
 }
 
 variable "router_port_name" {
-  description = "Apollo Router service port name"
+  default = "http"
+  description = "Apollo Router service NodePort port name"
 }
 
 // adding in IP info here to make it easier to manage.
