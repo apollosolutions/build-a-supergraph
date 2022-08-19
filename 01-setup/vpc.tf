@@ -1,3 +1,6 @@
+/**
+  This file creates X number of VPCs set w/in ./variables.tf, which are used by the assigned clusters.
+**/
 module "gcp-network" {
   source = "terraform-google-modules/network/google"
   for_each = {

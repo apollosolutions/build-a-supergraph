@@ -1,20 +1,35 @@
 #/bin/bash
+set -euxo pipefail
 
 # default vars
-CLUSTER_PREFIX="apollo-supergraph-k8s"
-PROJECT_REGION="us-east1"
+CLUSTER_PREFIX=${CLUSTER_PREFIX:-"apollo-supergraph-k8s"}
+PROJECT_REGION=${PROJECT_REGION:-"us-east1"}
 PROJECT_CLUSTERS=("${CLUSTER_PREFIX}-dev" "${CLUSTER_PREFIX}-prod")
 # end default vars
 
-if [[ -z "$PROJECT_ID" ]]; then
-    echo "Must provide PROJECT_ID in environment" 1>&2
-    exit 1
+if [[ $(which gcloud) == "" ]]; then
+  echo "gcloud not installed"
+  exit 1
 fi
 
+if [[ $(which kubectl) == "" ]]; then
+  echo "kubectl not installed"
+  exit 1
+fi
+
+if [[ $(which kubectx) == "" ]]; then
+  echo "kubectx not installed"
+  exit 1
+fi
+
+if [[ -z "$PROJECT_ID" ]]; then
+  echo "Must provide PROJECT_ID in environment" 1>&2
+  exit 1
+fi
 
 environment_setup(){
     echo "Configuring Kubeconfig for ${1}..."
-    gcloud container clusters get-credentials ${1} --zone ${PROJECT_REGION} --project ${PROJECT_ID} 
+    gcloud container clusters get-credentials ${1} --zone ${PROJECT_REGION} --project ${PROJECT_ID}
     kubectx ${1}=.
     kubectl create namespace "router"
     kubectl create serviceaccount -n "router" "secrets-csi-k8s"

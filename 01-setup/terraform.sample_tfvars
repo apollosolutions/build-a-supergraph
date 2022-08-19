@@ -1,9 +1,8 @@
-project_id=""
-project_region="us-east1"
+project_id     = ""
+project_region = "us-east1"
 
-github_token = ""
+github_token    = ""
 github_username = ""
-github_email = ""
+github_email    = ""
 
-apollo_key       = ""
-apollo_graph_ref = ""
+apollo_key = ""

@@ -7,6 +7,18 @@ variable "project_id" {
   description = "project id"
 }
 
+variable "github_token" {
+  description = "github user token"
+}
+
+variable "github_username" {
+  description = "github user token"
+}
+
+variable "github_email" {
+  description = "github user token"
+}
+
 variable "project_region" {
   description = "project region"
 }
@@ -58,7 +70,4 @@ variable "demo_stages" {
 // apollo-specific variables used for secrets
 variable "apollo_key" {
   description = "Apollo key for Router"
-}
-variable "apollo_graph_ref" {
-  description = "Apollo Graph Reference (graphref)"
 }

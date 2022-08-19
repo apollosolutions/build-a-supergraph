@@ -1,3 +1,7 @@
+/**
+  This file creates X number of GKE clusters using the var.demo_stages set w/in ./variables.tf
+  Each cluster uses the same node configuration for simplicity, but can be easily overridden at a later date. 
+**/
 module "gke_auth" {
   source = "terraform-google-modules/kubernetes-engine/google//modules/auth"
   for_each = {
