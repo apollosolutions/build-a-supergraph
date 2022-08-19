@@ -43,7 +43,7 @@ module "gce-lb-http" {
       groups = [
         {
           # Each node pool instance group should be added to the backend.
-          group                        = "${each.value.name}-node-pool"
+          group                        = "google_container_cluster.${var.demo_name}-${each.value.name}.instance_group_urls[0]"
           balancing_mode               = null
           capacity_scaler              = null
           description                  = null
