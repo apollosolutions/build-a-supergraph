@@ -43,7 +43,7 @@ module "gce-lb-http" {
       groups = [
         {
           # Each node pool instance group should be added to the backend.
-          group                        = var.backend
+          group                        = "${each.value.name}-node-pool"
           balancing_mode               = null
           capacity_scaler              = null
           description                  = null
