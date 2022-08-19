@@ -1,6 +1,5 @@
 module "gce-lb-http" {
   source            = "GoogleCloudPlatform/lb-http/google//modules/dynamic_backends"
-  version           = "~> 4.4"
   for_each = {
     for index, stage in var.demo_stages : stage.name => stage
   }
