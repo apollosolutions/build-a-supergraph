@@ -7,7 +7,7 @@ module "gce-lb-http" {
 
   project           = var.project_id
   name              = "${var.demo_name}-${each.value.name}-lb"
-  target_tags       = [module.mig1.target_tags, module.mig2.target_tags]
+  target_tags       = ["gke-node", "${var.project_id}-gke"]
   backends = {
     default = {
       description                     = null
