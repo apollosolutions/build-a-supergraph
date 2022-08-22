@@ -22,5 +22,7 @@ output "repo_infra" {
 }
 
 output "load-balancer-ip" {
-  value = module.gce-lb-http.external_ip
+  value = {
+    for k, v in module.gce-lb-http : k => v. external_ip
+  }
 }
