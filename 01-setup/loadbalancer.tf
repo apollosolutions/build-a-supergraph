@@ -39,10 +39,9 @@ module "gce-lb-http" {
         sample_rate = 1.0
       }
 
-      groups = [
-        {
+      groups = [ for group in module.gke[each.key].instance_group_urls : {
           # Each node pool instance group should be added to the backend.
-          group                        =  module.gke[each.key].instance_group_urls[0]
+          group                        =  group
           balancing_mode               = null
           capacity_scaler              = null
           description                  = null
@@ -53,7 +52,7 @@ module "gce-lb-http" {
           max_rate_per_instance        = null
           max_rate_per_endpoint        = null
           max_utilization              = null
-        },
+        }
       ]
 
       iap_config = {
