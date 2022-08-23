@@ -20,3 +20,9 @@ output "repo_infra" {
   value       = github_repository.infra_repo.html_url
   description = "Infra (router, o11y) Repo"
 }
+
+output "load-balancer-ip" {
+  value = {
+    for k, v in module.gce-lb-http : k => v. external_ip
+  }
+}
