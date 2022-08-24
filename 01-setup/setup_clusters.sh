@@ -30,7 +30,10 @@ fi
 environment_setup(){
     echo "Configuring Kubeconfig for ${1}..."
     gcloud container clusters get-credentials ${1} --zone ${PROJECT_REGION} --project ${PROJECT_ID}
+
+    # short context aliases
     kubectx ${1}=.
+
     kubectl create namespace "router"
     kubectl create serviceaccount -n "router" "secrets-csi-k8s"
     kubectl annotate serviceaccount -n "router" "secrets-csi-k8s" iam.gke.io/gcp-service-account=secrets-csi-k8s@$PROJECT_ID.iam.gserviceaccount.com
@@ -38,13 +41,12 @@ environment_setup(){
         --role roles/iam.workloadIdentityUser \
         --member "serviceAccount:${PROJECT_ID}.svc.id.goog[router/secrets-csi-k8s]" \
         secrets-csi-k8s@$PROJECT_ID.iam.gserviceaccount.com
-    # apollo key
+
+    # apollo key for Router
     gcloud secrets add-iam-policy-binding apollo-key \
         --member="serviceAccount:secrets-csi-k8s@$PROJECT_ID.iam.gserviceaccount.com" \
         --role='roles/secretmanager.secretAccessor'
-    gcloud secrets add-iam-policy-binding apollo-graph-ref \
-        --member="serviceAccount:secrets-csi-k8s@$PROJECT_ID.iam.gserviceaccount.com" \
-        --role='roles/secretmanager.secretAccessor'
+
     csi_setup $1
 }
 

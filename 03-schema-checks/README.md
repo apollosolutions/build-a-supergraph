@@ -8,7 +8,7 @@
 
 ## Part A: Schema checks on pull requests
 
-- TODO: add new workflow to subgraph repos with check steps
+- TODO: add rover subgraph check steps to PR workflow in subgrpahs
 
 ## Part B: Demonstrate a schema change
 

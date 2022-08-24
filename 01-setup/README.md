@@ -38,17 +38,16 @@ cd build-a-supergraph
   - Grant it permissions to the following scopes:
     - `repo` (for creating repos)
     - `delete-repo` (for cleanup at the end)
-- [Apollo Studio graph](https://www.apollographql.com/docs/studio/org/graphs#creating-a-graph)
-  - [Apollo Studio key](https://www.apollographql.com/docs/studio/api-keys#graph-api-keys)
+- [Apollo Studio Personal API key](https://studio.apollographql.com/user-settings/api-keys)
 
 ```sh
 export PROJECT_ID="<your-project-id>"
+export APOLLO_KEY="<your personal apollo api key>"
 
+# gcloud
 gcloud components update
 gcloud components install gke-gcloud-auth-plugin
 gcloud auth application-default login
-# expected output:
-# > Credentials saved to file: [/Users/you/.config/gcloud/application_default_credentials.json]
 
 gcloud config set project ${PROJECT_ID}
 gcloud services enable \
@@ -57,21 +56,39 @@ gcloud services enable \
   cloudasset.googleapis.com \
   storage.googleapis.com
 
+# github
 gh auth login
+
+# apollo
+./create_graph.sh
+# Save the output for the next step! Example:
+#
+# New terraform variables:
+#
+# apollo_key      = "service:apollo-supergraph-k8s-5ac437:asdasdfasdfasd"
+# apollo_graph_id = "apollo-supergraph-k8s-asdfas"
 ```
+
+<details>
+  <summary>Optional: how do I specify a different name for clusters and repos? (The default is "apollo-supergraph-k8s".)</summary>
+
+1.  Before running `create_graph.sh` or `setup_clusters.sh`, export the prefix as a variable:
+
+    ```sh
+    export CLUSTER_PREFIX=my-custom-prefix
+    ```
+
+2.  Before running `terraform apply`, add another variable to `terraform.tfvars`:
+
+    ```terraform
+    demo_name = "my-custom-prefix"
+    ```
+
+</details>
 
 ### Setup terraform variables
 
-Copy `terraform.sample_tfvars` to `terraform.tfvars` within the `01-setup` folder and replace the values below appropriately:
-
-```terraform
-github_token    = ""
-github_username = ""
-github_email    = ""
-project_id      = ""
-project_region  = "us-east1"
-apollo_key      = ""
-```
+Copy `terraform.sample_tfvars` to `terraform.tfvars` within the `01-setup` folder and replace the values according to the comments.
 
 ## Part B: Provision resources
 
@@ -83,44 +100,45 @@ Once you have populated your `terraform.tfvars` file, run the following commands
 
 ```sh
 cd 01-setup
-terraform init # 2 minutes
-terraform plan
-terraform apply # will prompt for confirmation
-# takes about 10-20 minutes- grab a cup of coffee while it runs
-# TODO: confirm time to run after infra finalized
+terraform init # takes about 2 minutes
+terraform apply # will print plan then prompt for confirmation
+# takes about 10-15 minutes
+```
+
+Expected output:
+
+```
+kubernetes_cluster_names = {
+  "dev" = "apollo-supergraph-k8s-dev"
+  "prod" = "apollo-supergraph-k8s-prod"
+  "infra" = "apollo-supergraph-k8s-infra"
+}
+repo_infra = "https://github.com/you/apollo-supergraph-k8s-infrastructure"
+repo_subgraph_a = "https://github.com/you/apollo-supergraph-k8s-subgraph-a"
+repo_subgraph_b = "https://github.com/you/apollo-supergraph-k8s-subgraph-b"
 ```
 
 <details>
   <summary>What does this do?</summary>
 
-- `terraform init`: Installs the required module dependencies for creating the Google Kubernetes Engine (GKE) clusters and networking
-- `terraform plan`: Shows the planned infrastructure that's going to be created when running the next command, as well as showing any errors before applying
-- `terraform apply`: Applies the planned infrastructure against your GCP account
+Terraform provisions:
+
+- Three Kubernetes clusters (dev, prod, infra-tooling)
+- VPCs for the clusters to communicate with one another
+- Runtime secrets for the Router to communicate with Studio
+- Three Github repos (subgraph-a, subgraph-b, infra)
+- Github action secrets for GCP and Apollo credentials
+
+The subgraph repos are configured to build and deploy to the `dev` cluster once they're provisioned.
 
 </details>
-
-Outputs:
-
-1. `terraform` output:
-
-   ```
-   Outputs:
-
-   kubernetes_cluster_names = {
-     "dev" = "apollo-supergraph-k8s-dev"
-     "prod" = "apollo-supergraph-k8s-prod"
-     "tooling-infra" = "apollo-supergraph-k8s-tooling-infra"
-   }
-   ```
-
-2. `01-setup/github-deploy-key.json`. **Do not check this into version control.** You will use this file in Part C to deploy subgraph services.
 
 ### Run cluster setup script
 
 After creating the necessary clusters, you will need to run the included cluster setup script:
 
 ```sh
-./setup_clusters.sh
+./setup_clusters.sh # about 3 minutes
 ```
 
 <details>
@@ -137,61 +155,7 @@ For both `dev` and `prod` clusters:
 
 </details>
 
-After completing, you should be able to run:
-
-```sh
-kubectx apollo-supergraph-k8s-dev
-kubectl get pods -A
-```
-
-Which returns all running pods.
-
-## Part C: Deploy applications
-
-### Deploy subgraphs
-
-Terraform created two repos for your subgraphs (and a third repo for infrastructure). After creating the repos:
-
-- Terraform automatically added a repository secret called `GCP_CREDENTIALS` in each repo.
-- The initial commit kicked off the "docker-build" actions to build Docker images for deployment.
-
-To deploy the images to your clusters:
-
-```sh
-gh workflow run deploy-gke --repo $GITHUB_ORG/apollo-supergraph-k8s-subgraph-a \
-  -f version=main \
-  -f cluster=apollo-supergraph-k8s-dev \
-  -f publish=false \
-  -f variant=dev \
-  -f dry-run=false \
-  -f debug=false
-
-gh workflow run deploy-gke --repo $GITHUB_ORG/apollo-supergraph-k8s-subgraph-a \
-  -f version=main \
-  -f cluster=apollo-supergraph-k8s-prod \
-  -f publish=false \
-  -f variant=prod \
-  -f dry-run=false \
-  -f debug=false
-
-gh workflow run deploy-gke --repo $GITHUB_ORG/apollo-supergraph-k8s-subgraph-b \
-  -f version=main \
-  -f cluster=apollo-supergraph-k8s-dev \
-  -f publish=false \
-  -f variant=dev \
-  -f dry-run=false \
-  -f debug=false
-
-gh workflow run deploy-gke --repo $GITHUB_ORG/apollo-supergraph-k8s-subgraph-b \
-  -f version=main \
-  -f cluster=apollo-supergraph-k8s-prod \
-  -f publish=false \
-  -f variant=prod \
-  -f dry-run=false \
-  -f debug=false
-```
-
-To access a subgraph directly, use `kubectl port-forward`:
+After completing, you should be able to run `kubectl port-forward` to test the subgraphs in `dev`:
 
 ```sh
 kubectx apollo-supergraph-k8s-dev
@@ -199,33 +163,28 @@ kubectl port-forward service/subgraph-a-chart 4000:4000
 open http://localhost:4000
 ```
 
-<details>
-  <summary>Optional: how do I specify a different cluster prefix?</summary>
+## Part C: Deploy applications
 
-1.  Before running `terraform apply`, add another variable to `terraform.tfvars`:
+### Deploy subgraphs to prod
 
-    ```terraform
-    demo_name = "my-custom-prefix"
-    ```
+Commits to the `main` branch of the subgraph repos are automatically built and deployed to the `dev` cluster. To deploy to prod, run the deploy actions:
 
-2.  Before running `setup_clusters.sh`, export the prefix as a variable:
+```sh
+gh workflow run deploy-gke --repo $GITHUB_ORG/apollo-supergraph-k8s-subgraph-a \
+  -f version=main \
+  -f environment=prod \
+  -f dry-run=false \
+  -f debug=false
 
-    ```sh
-    export CLUSTER_PREFIX=my-custom-prefix
-    ./setup_clusters.sh
-    ```
+gh workflow run deploy-gke --repo $GITHUB_ORG/apollo-supergraph-k8s-subgraph-b \
+  -f version=main \
+  -f environment=prod \
+  -f dry-run=false \
+  -f debug=false
+```
 
-3.  After creating the repos for subgraphs and infra, you'll need to update cluster names in workflows files in `.github/workflows` in each repo.
-
-    ```yaml
-    # .github/workflows/gke-deploy.yaml
-    on:
-      workflow_dispatch:
-        inputs:
-          clusters:
-            options:
-              - my-custom-prefix-dev
-              - my-custom-prefix-prod
-    ```
-
-</details>
+```sh
+kubectx apollo-supergraph-k8s-prod
+kubectl port-forward service/subgraph-a-chart 4000:4000
+open http://localhost:4000
+```

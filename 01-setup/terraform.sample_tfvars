@@ -1,8 +1,7 @@
-project_id     = ""
-project_region = "us-east1"
+project_id     = ""         # Google Cloud Project ID
+project_region = "us-east1" # if changed, `export PROJECT_REGION=us-central1` before running setup_clusters.sh
 
-github_token    = ""
-github_username = ""
-github_email    = ""
+github_token    = "" # Personal API Token
 
-apollo_key = ""
+apollo_key      = "" # Graph Admin API key from create_graph.sh output
+apollo_graph_id = "" # Graph ID from create_graph.sh output

@@ -1,6 +1,10 @@
 variable "demo_name" {
   default     = "apollo-supergraph-k8s"
-  description = "name of the demo (used for resources)"
+  description = "name of the demo (used for K8s clusters, graphs, and github repos)"
+  validation {
+    condition     = length(var.demo_name) < 24
+    error_message = "demo_name max length is 24"
+  }
 }
 
 variable "project_id" {
@@ -8,14 +12,6 @@ variable "project_id" {
 }
 
 variable "github_token" {
-  description = "github user token"
-}
-
-variable "github_username" {
-  description = "github user token"
-}
-
-variable "github_email" {
   description = "github user token"
 }
 
@@ -39,12 +35,12 @@ variable "router_port_name" {
 }
 
 // adding in IP info here to make it easier to manage.
-// due to the peering needed to support a shared tooling-infra cluster (for uploading metrics), each subnet cannot conflict; giving each range a healthy /16 avoids potential
+// due to the peering needed to support a shared infra cluster (for uploading metrics), each subnet cannot conflict; giving each range a healthy /16 avoids potential
 // IP exhaustion for the demo.
 variable "demo_stages" {
   default = [
     {
-      name : "tooling-infra",
+      name : "infra",
       subnet_range : "10.10.0.0/16"
       ip_range_pods : "10.20.0.0/16",
       ip_range_services : "10.30.0.0/16",
@@ -69,5 +65,9 @@ variable "demo_stages" {
 
 // apollo-specific variables used for secrets
 variable "apollo_key" {
-  description = "Apollo key for Router"
+  description = "Apollo key for checks, publishes, and Router Uplink"
+}
+
+variable "apollo_graph_id" {
+  description = "Apollo graph ID for checks, publishes, and Router Uplink"
 }
