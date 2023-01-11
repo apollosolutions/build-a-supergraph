@@ -29,8 +29,7 @@ fi
 
 # get AWS account ID (numeric)
 ACCOUNT_ID=`aws sts get-caller-identity --output text --query Account`
-echo $ACCOUNT_ID
-exit 
+
 curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.4/docs/install/iam_policy.json
 aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \
