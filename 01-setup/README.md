@@ -18,7 +18,20 @@ git pull
 
 ### Install dependencies
 
+#### GCP
+
 - [GCloud CLI](https://cloud.google.com/sdk/docs/install)
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [kubectx](https://github.com/ahmetb/kubectx#installation)
+- [Github CLI](https://cli.github.com/)
+- [jq](https://stedolan.github.io/jq/download/)
+- Optional: [Helm](https://helm.sh/docs/intro/install/)
+
+#### AWS
+
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [eksctl](https://eksctl.io/introduction/#installation)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [kubectx](https://github.com/ahmetb/kubectx#installation)
@@ -35,7 +48,9 @@ git pull
 
 ### Gather credentials
 
-- Google Cloud project id
+#### GCP
+
+- Google Cloud project ID
 - [Github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   - [Settings > Developer Settings > Personal Access Tokens](https://github.com/settings/tokens)
   - Grant it permissions to the following scopes:
@@ -43,19 +58,39 @@ git pull
     - `delete_repo` (for cleanup at the end)
 - [Apollo GraphOS Personal API key](https://studio.apollographql.com/user-settings/api-keys)
 
+#### AWS
+
+- [AWS Access Key and Secret for use with the AWS CLI*](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
+- [Github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+  - [Settings > Developer Settings > Personal Access Tokens](https://github.com/settings/tokens)
+  - Grant it permissions to the following scopes:
+    - `repo` (for creating repos)
+    - `delete_repo` (for cleanup at the end)
+- [Apollo GraphOS Personal API key](https://studio.apollographql.com/user-settings/api-keys)
+
+\* Please note to use an account with Administrator priviledges, or at minimum, the ability to run: 
+
+* Terraform, which creates: 
+  * IAM user and policy
+  * EKS cluster and node groups, and associates IAM permissions to Kubernetes service accounts
+  * VPC and subnets
+
+
 ### Export all necessary variables
+
+First, change directories in the cloud provider you wish to use. All terraform is within the `terraform` root level folder, with each cloud provider having a subfolder within. For the below examples, we'll assume GCP, however the others will use the same commands. 
 
 Make a copy of `.env.sample` called `.env` to keep track of these values. You can always run `source .env` to reload all environment variables in a new terminal session.
 
 ```sh
-cd 01-setup/
+cd terraform/gcp
 cp .env.sample .env
 ```
 
 Edit the new `.env` file:
 
 ```sh
-export PROJECT_ID="<your google cloud project id>"
+export PROJECT_ID="<your google cloud project id>" # if using AWS, you will not see this line and can omit this
 export APOLLO_KEY="<your apollo personal api key>"
 export GITHUB_ORG="<your github account name or organization name>"
 export TF_VAR_github_token="<your github personal access token>"
@@ -64,7 +99,7 @@ export TF_VAR_github_token="<your github personal access token>"
 Run this script to create your graph and get environment variables for GraphOS:
 
 ```sh
-cd 01-setup
+cd terraform/gcp
 source .env
 ./create_graph.sh
 ```
@@ -77,6 +112,8 @@ source .env
 
 ### Run setup commands
 
+#### If using GCP
+
 ```sh
 gcloud components update
 gcloud components install gke-gcloud-auth-plugin
@@ -88,11 +125,18 @@ gcloud services enable \
   secretmanager.googleapis.com \
   cloudasset.googleapis.com \
   storage.googleapis.com
-```
-
-```
 gh auth login
 ```
+
+#### If using AWS
+
+```sh
+aws configure
+gh auth login
+```
+
+#### General
+
 
 <details>
   <summary>Optional: how do I specify a different name for clusters and repos? (The default is "apollo-supergraph-k8s".)</summary>
@@ -145,7 +189,7 @@ Terraform provisions:
 
 - Two Kubernetes clusters (dev and prod)
 - Three Github repos (subgraph-a, subgraph-b, infra)
-- Github action secrets for GCP and Apollo credentials
+- Github action secrets for GCP/AWS and Apollo credentials
 
 The subgraph repos are configured to build and deploy to the `dev` cluster once they're provisioned. (The deploy will fail the first time. See "Note about "initial commit" errors" below.)
 
@@ -156,7 +200,7 @@ The subgraph repos are configured to build and deploy to the `dev` cluster once 
 After creating the necessary clusters, you will need to run the included cluster setup script:
 
 ```sh
-cd 01-setup
+cd terraform/gcp
 ./setup_clusters.sh # about 2 minutes
 ```
 
@@ -166,7 +210,10 @@ cd 01-setup
 For both `dev` and `prod` clusters:
 
 - Configures your local `kubectl` so you can inspect your clusters
-- Configures namespace, service account, and role bindings for Open Telemetry and Google Traces.
+- For GCP users:
+  - Configures namespace, service account, and role bindings for Open Telemetry and Google Traces.
+- For AWS users:
+  - Configures load balancer controller policy and IAM service account
 
 </details>
 

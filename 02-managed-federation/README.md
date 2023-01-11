@@ -14,19 +14,25 @@ In both **subgraph-a** and **subgraph-b** repositories:
 - Add a new job to the bottom of the file:
   ```yaml
   publish:
-    needs: [deploy]
+    needs: [deploy_aws, deploy_gcp]
+    if: always() &&
+      (needs.deploy_aws.result == 'success' || needs.deploy_aws.result == 'skipped') &&
+      (needs.deploy_gcp.result == 'success' || needs.deploy_gcp.result == 'skipped')
     uses: ./.github/workflows/_rover-subgraph-publish.yml
     secrets: inherit
     with:
       subgraph_name: subgraph-a # change to subgraph-b in that repo
-      variant: dev
+      variant: ${{ inputs.environment }}
   ```
 - After merging the code to the `main` branch, the `Merge to Main` action will build the docker container, deploy the subgraph application, and finally publish the subgraph schema to Apollo GraphOS.
 - Visit your graph in GraphOS Studio to see that the subgraph schemas published successfully and it built a new supergraph schema for the `dev` variant.
 - Add a new job to `.github/workflows/Manual Deploy.yml`:
   ```yaml
   publish:
-    needs: [deploy]
+    needs: [deploy_aws, deploy_gcp]
+    if: always() &&
+      (needs.deploy_aws.result == 'success' || needs.deploy_aws.result == 'skipped') &&
+      (needs.deploy_gcp.result == 'success' || needs.deploy_gcp.result == 'skipped')
     uses: ./.github/workflows/_rover-subgraph-publish.yml
     secrets: inherit
     with:
