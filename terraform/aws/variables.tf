@@ -40,15 +40,15 @@ variable "demo_stages" {
       min_nodes : 1,
       max_nodes : 1
     },
-    # prod={
-    #   name : "prod",
-    #   cidr : "10.1.0.0/16",
-    #   private_subnets : ["10.1.0.0/20", "10.1.16.0/20"],
-    #   public_subnets : ["10.1.32.0/20", "10.1.48.0/20"],
-    #   node_type : "m6a.large",
-    #   min_nodes : 2,
-    #   max_nodes : 3
-    # }
+    prod = {
+      name : "prod",
+      cidr : "10.1.0.0/16",
+      private_subnets : ["10.1.0.0/20", "10.1.16.0/20"],
+      public_subnets : ["10.1.32.0/20", "10.1.48.0/20"],
+      node_type : "m6a.large",
+      min_nodes : 2,
+      max_nodes : 3
+    }
   }
 }
 

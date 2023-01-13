@@ -6,6 +6,12 @@ Running Google Cloud resources will continue to incur costs on your account so w
 
 ### Automated cleanup
 
+### Cloud-specific steps
+
+There are a few cloud-specific steps you'll need to take.
+
+#### GCP
+
 In order to delete some non-Kubernetes resources created by Google Cloud, it's easiest to just delete everything:
 
 ```sh
@@ -20,10 +26,38 @@ kubectx apollo-supergraph-k8s-prod
 kubectl delete daemonsets,replicasets,services,deployments,pods,rc,ingress --all --all-namespaces
 ```
 
+#### AWS 
+
+In order to ensure the load balancers are properly removed, and the iamservice roles are removed, please run:
+
+```
+gh workflow run "Uninstall Router" --repo $GITHUB_ORG/apollo-supergraph-k8s-infra
+open https://github.com/$GITHUB_ORG/apollo-supergraph-k8s-infra/actions/workflows/uninstall-router.yaml
+``` 
+
+And wait for the action to complete on the opened screen. 
+
+Once finished, run the following, replacing `apollo-supergraph-k8s` with the appropriate cluster prefix if modified: 
+
+```sh
+# dev
+eksctl delete iamserviceaccount \
+    --cluster=apollo-supergraph-k8s-dev \
+    --name="aws-load-balancer-controller" 
+aws cloudformation delete-stack --stack-name eksctl-apollo-supergraph-k8s-dev-addon-iamserviceaccount-kube-system-aws-load-balancer-controller
+# prod
+eksctl delete iamserviceaccount \
+    --cluster=apollo-supergraph-k8s-prod \
+    --name="aws-load-balancer-controller" 
+aws cloudformation delete-stack --stack-name eksctl-apollo-supergraph-k8s-prod-addon-iamserviceaccount-kube-system-aws-load-balancer-controller
+```
+
+### Remaining steps
+
 Then you can destroy all the provisioned resources (Kubernetes clusters, GitHub repositories) with terraform:
 
 ```sh
-cd 01-setup
+cd terraform/<cloud_provider>
 terraform destroy # takes 10 minutes
 ```
 

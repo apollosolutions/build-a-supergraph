@@ -27,7 +27,8 @@ terraform.rc
 kubeconfig*
 *key.json
 *.tfvars
-
+eks_user_creds.txt
+v2_4_4*
 # Secrets and environmental variables
 .env
 

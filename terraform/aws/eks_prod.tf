@@ -7,7 +7,7 @@ provider "kubernetes" {
     api_version = "client.authentication.k8s.io/v1alpha1"
     command     = "aws"
     # This requires the awscli to be installed locally where Terraform is executed
-    args = ["eks", "get-token", "--cluster-name", module.eks_prod.cluster_id]
+    args = ["eks", "get-token", "--cluster-name", module.eks_prod.cluster_name]
   }
 }
 
@@ -16,7 +16,7 @@ module "eks_prod" {
   providers = {
     kubernetes = kubernetes.prod
   }
-  cluster_name                   = "${var.demo_name}-dev"
+  cluster_name                   = "${var.demo_name}-prod"
   cluster_endpoint_public_access = true
 
   cluster_addons = {
@@ -31,26 +31,25 @@ module "eks_prod" {
     }
   }
 
-  vpc_id                   = module.vpc["dev"].vpc_id
-  subnet_ids               = module.vpc["dev"].private_subnets
-  control_plane_subnet_ids = module.vpc["dev"].intra_subnets
+  vpc_id                   = module.vpc["prod"].vpc_id
+  subnet_ids               = module.vpc["prod"].private_subnets
+  control_plane_subnet_ids = module.vpc["prod"].intra_subnets
 
   manage_aws_auth_configmap = true
-  create_aws_auth_configmap = true
 
   eks_managed_node_group_defaults = {
-    ami_type       = "AL2_ARM_64"
-    instance_types = ["${var.demo_stages["dev"].node_type}"]
+    ami_type       = "AL2_x86_64"
+    instance_types = ["${var.demo_stages["prod"].node_type}"]
   }
 
   eks_managed_node_groups = {
     primary = {
       disk_size    = 20
-      min_size     = var.demo_stages["dev"].min_nodes
-      max_size     = var.demo_stages["dev"].max_nodes
-      desired_size = var.demo_stages["dev"].min_nodes
+      min_size     = var.demo_stages["prod"].min_nodes
+      max_size     = var.demo_stages["prod"].max_nodes
+      desired_size = var.demo_stages["prod"].min_nodes
 
-      instance_types = ["${var.demo_stages["dev"].node_type}"]
+      instance_types = ["${var.demo_stages["prod"].node_type}"]
     }
   }
 

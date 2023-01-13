@@ -37,7 +37,7 @@ In both **subgraph-a** and **subgraph-b** repositories:
     secrets: inherit
     with:
       subgraph_name: subgraph-a # change to subgraph-b in that repo
-      variant: ${{ inputs.environment }}
+      variant: dev
   ```
 - After merging this change to main, trigger the `Manual Deploy` action to deploy and publish to production:
 
@@ -62,12 +62,12 @@ In both **subgraph-a** and **subgraph-b** repositories:
 Now that the supergraph schema is available via Apollo Uplink, you can deploy the router:
 
 ```
-gh workflow run "Deploy Router GKE" --repo $GITHUB_ORG/apollo-supergraph-k8s-infra \
+gh workflow run "Deploy Router" --repo $GITHUB_ORG/apollo-supergraph-k8s-infra \
   -f environment=dev \
   -f dry-run=false \
   -f debug=false
 
-gh workflow run "Deploy Router GKE" --repo $GITHUB_ORG/apollo-supergraph-k8s-infra \
+gh workflow run "Deploy Router" --repo $GITHUB_ORG/apollo-supergraph-k8s-infra \
   -f environment=prod \
   -f dry-run=false \
   -f debug=false

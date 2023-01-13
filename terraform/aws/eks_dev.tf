@@ -39,7 +39,7 @@ module "eks_dev" {
   manage_aws_auth_configmap = true
 
   eks_managed_node_group_defaults = {
-    ami_type       = "AL2_ARM_64"
+    ami_type       = "AL2_x86_64"
     instance_types = ["${var.demo_stages["dev"].node_type}"]
   }
 

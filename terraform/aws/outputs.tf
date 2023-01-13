@@ -1,16 +1,9 @@
-# output "kubernetes_cluster_names" {
-#   value = {
-#     for k, v in module.eks : k => v.cluster_name
-#   }
-#   description = "Cluster names for each stage"
-# }
-
 output "kubernetes_dev" {
   value       = module.eks_dev.cluster_name
   description = "Dev K8s Cluster"
 }
 
-output "kubernetes_" {
+output "kubernetes_prod" {
   value       = module.eks_prod.cluster_name
   description = "Prod K8s Cluster"
 }
