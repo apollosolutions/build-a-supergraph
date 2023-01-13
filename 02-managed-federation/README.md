@@ -22,7 +22,7 @@ In both **subgraph-a** and **subgraph-b** repositories:
     secrets: inherit
     with:
       subgraph_name: subgraph-a # change to subgraph-b in that repo
-      variant: ${{ inputs.environment }}
+      variant: dev
   ```
 - After merging the code to the `main` branch, the `Merge to Main` action will build the docker container, deploy the subgraph application, and finally publish the subgraph schema to Apollo GraphOS.
 - Visit your graph in GraphOS Studio to see that the subgraph schemas published successfully and it built a new supergraph schema for the `dev` variant.
@@ -37,7 +37,7 @@ In both **subgraph-a** and **subgraph-b** repositories:
     secrets: inherit
     with:
       subgraph_name: subgraph-a # change to subgraph-b in that repo
-      variant: dev
+      variant: ${{ inputs.environment }}
   ```
 - After merging this change to main, trigger the `Manual Deploy` action to deploy and publish to production:
 
