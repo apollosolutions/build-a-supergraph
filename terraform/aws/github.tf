@@ -80,7 +80,7 @@ resource "github_actions_secret" "subgraph_aws_secret" {
   plaintext_value = aws_iam_access_key.eks_user_key.secret
 }
 
-# infra repo secrets: the only different value is GCP_CREDENTIALS
+# infra repo secrets - no difference from the subgraphs
 resource "github_actions_secret" "infra_apollo_graph_secret" {
   repository      = github_repository.infra_repo.name
   secret_name     = "APOLLO_GRAPH_ID"
