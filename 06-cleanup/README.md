@@ -10,7 +10,7 @@ Running Google Cloud resources will continue to incur costs on your account so w
 
 There are a few cloud-specific steps you'll need to take.
 
-#### GCP
+#### <image src="../images/gcp.svg" height="13" style="margin:auto;" /> GCP
 
 In order to delete some non-Kubernetes resources created by Google Cloud, it's easiest to just delete everything:
 
@@ -26,7 +26,7 @@ kubectx apollo-supergraph-k8s-prod
 kubectl delete daemonsets,replicasets,services,deployments,pods,rc,ingress --all --all-namespaces
 ```
 
-#### AWS 
+#### <image src="../images/aws.svg" height="13" style="margin:auto;" /> AWS
 
 In order to ensure the load balancers are properly removed, and the iamservice roles are removed, please run:
 

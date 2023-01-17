@@ -48,7 +48,7 @@ git pull
 
 ### Gather credentials
 
-#### GCP
+#### <image src="../images/gcp.svg" height="13" style="margin:auto;" /> GCP
 
 - Google Cloud project ID
 - [Github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
@@ -58,7 +58,7 @@ git pull
     - `delete_repo` (for cleanup at the end)
 - [Apollo GraphOS Personal API key](https://studio.apollographql.com/user-settings/api-keys)
 
-#### AWS
+#### <image src="../images/aws.svg" height="13" style="margin:auto;" /> AWS
 
 - [AWS Access Key and Secret for use with the AWS CLI*](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
 - [Github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
@@ -112,7 +112,7 @@ source .env
 
 ### Run setup commands
 
-#### If using GCP
+#### <image src="../images/gcp.svg" height="13" style="margin:auto;" /> GCP
 
 ```sh
 gcloud components update
@@ -128,7 +128,7 @@ gcloud services enable \
 gh auth login
 ```
 
-#### If using AWS
+#### <image src="../images/aws.svg" height="13" style="margin:auto;" /> AWS
 
 ```sh
 aws configure
@@ -161,10 +161,10 @@ You may need to clean up your Github packages before creating new repos of the s
 
 ### Create Kubernetes clusters, basic infrastructure, and Github repositories
 
-**Note: The following commands will create resources on your GCP account, and begin to accrue a cost.** The example infrastructure defaults to a lower-cost environment (small node count and instance size), however it will not be covered by GCP's free tier.
+**Note: The following commands will create resources on your cloud provider account, and begin to accrue a cost.** The example infrastructure defaults to a lower-cost environment (small node count and instance size), however it will not be covered by either of GCP's or AWS's free tiers.
 
 ```sh
-cd 01-setup
+cd terraform/gcp
 terraform init # takes about 2 minutes
 terraform apply # will print plan then prompt for confirmation
 # takes about 10-15 minutes

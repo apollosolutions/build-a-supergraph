@@ -8,7 +8,7 @@ This repository contains the demos for the "Build a Supergraph" series. All you 
 
 ## What you'll build
 
-![Architecture diagram of the supergraph](build-a-supergraph-fj.png)
+![Architecture diagram of the supergraph](images/build-a-supergraph-fj.png)
 
 ### The ending Software Development Life Cycle (SLDC)
 

@@ -20,7 +20,7 @@ The router and subgraphs are already configured to send Open Telemetry traces to
 
 Make a GraphQL request to the router via its IP address. 
 
-### GCP
+### <image src="../images/gcp.svg" height="13" style="margin:auto;" /> GCP
 
 ```sh
 kubectx apollo-supergraph-k8s-prod
@@ -31,14 +31,13 @@ kubectl port-forward -n zipkin svc/zipkin 9411:9411
 
 Lastly, open up [http://localhost:9411/](http://localhost:9411/) in addition to the Router page. Upon doing so, you'll have both the Router and Zipkin pages open. Run a few requests and refresh the Zipkin list, and you should be seeing them come through! 
 
-### AWS
+### <image src="../images/aws.svg" height="13" style="margin:auto;" /> AWS
 
 ```sh
 kubectx apollo-supergraph-k8s-prod
 ROUTER_IP=$(kubectl get ingress -n router -o jsonpath="{.*.*.status.loadBalancer.ingress.*.hostname}")
 open http://$ROUTER_IP
 kubectl port-forward -n zipkin svc/zipkin 9411:9411
-open http://localhost:9411
 ```
 
 Lastly, open up [http://localhost:9411/](http://localhost:9411/) in addition to the Router page. Upon doing so, you'll have both the Router and Zipkin pages open. Run a few requests and refresh the Zipkin list, and you should be seeing them come through! 
