@@ -75,7 +75,6 @@ git pull
   * EKS cluster and node groups, and associates IAM permissions to Kubernetes service accounts
   * VPC and subnets
 
-
 ### Export all necessary variables
 
 First, change directories in the cloud provider you wish to use. All terraform is within the `terraform` root level folder, with each cloud provider having a subfolder within. For the below examples, we'll assume GCP, however the others will use the same commands. 
@@ -136,7 +135,6 @@ gh auth login
 ```
 
 #### General
-
 
 <details>
   <summary>Optional: how do I specify a different name for clusters and repos? (The default is "apollo-supergraph-k8s".)</summary>
