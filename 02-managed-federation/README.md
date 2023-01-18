@@ -73,18 +73,25 @@ gh workflow run "Deploy Router" --repo $GITHUB_ORG/apollo-supergraph-k8s-infra \
   -f debug=false
 ```
 
-Make a GraphQL request to the router via its IP address:
+Lastly, make a GraphQL request to the router via its IP address. Follow the below instructions for your cloud provider you are using. 
+
+### <image src="../images/gcp.svg" height="13" style="margin:auto;" /> GCP
 
 ```sh
+kubectx apollo-supergraph-k8s-prod
 ROUTER_IP=$(kubectl get ingress -n router -o jsonpath="{.*.*.status.loadBalancer.ingress.*.ip}")
 open http://$ROUTER_IP
 ```
 
-The Google Cloud ingress may take a few minutes to start. If you don't want to wait for an IP address you can use `port-forward`:
+Lastly, open up [http://localhost:9411/](http://localhost:9411/) in addition to the Router page. Upon doing so, you'll have both the Router and Zipkin pages open. Run a few requests and refresh the Zipkin list, and you should be seeing them come through! 
+
+### <image src="../images/aws.svg" height="13" style="margin:auto;" /> AWS
 
 ```sh
-kubectl port-forward service/router -n router 4000:80
-```
+kubectx apollo-supergraph-k8s-prod
+ROUTER_HOSTNAME=$(kubectl get ingress -n router -o jsonpath="{.*.*.status.loadBalancer.ingress.*.hostname}")
+open http://$ROUTER_HOSTNAME
+kubectl port-forward -n zipkin svc/zipkin 9411:9411
 
 ## Onward!
 

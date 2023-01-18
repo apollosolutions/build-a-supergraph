@@ -35,8 +35,8 @@ Lastly, open up [http://localhost:9411/](http://localhost:9411/) in addition to 
 
 ```sh
 kubectx apollo-supergraph-k8s-prod
-ROUTER_IP=$(kubectl get ingress -n router -o jsonpath="{.*.*.status.loadBalancer.ingress.*.hostname}")
-open http://$ROUTER_IP
+ROUTER_HOSTNAME=$(kubectl get ingress -n router -o jsonpath="{.*.*.status.loadBalancer.ingress.*.hostname}")
+open http://$ROUTER_HOSTNAME
 kubectl port-forward -n zipkin svc/zipkin 9411:9411
 ```
 
