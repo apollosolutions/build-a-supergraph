@@ -57,6 +57,7 @@ environment_setup(){
       --role-name "AmazonEKSLoadBalancerControllerRole-${1}" \
       --attach-policy-arn=arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
       --approve \
+      --region ${PROJECT_REGION} \
       --override-existing-serviceaccounts
     curl -Lo v2_4_4_full.yaml https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/download/v2.4.4/v2_4_4_full.yaml
     sed -i.bak -e '480,488d' ./v2_4_4_full.yaml

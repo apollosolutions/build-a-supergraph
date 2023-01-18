@@ -61,6 +61,9 @@ git pull
 #### <image src="../images/aws.svg" height="13" style="margin:auto;" /> AWS
 
 - [AWS Access Key and Secret for use with the AWS CLI*](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
+  - Additionally, ensure you either:
+    - Set the default region during the AWS CLI configuration
+    - Set the `AWS_REGION` environment variable when running commands
 - [Github personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   - [Settings > Developer Settings > Personal Access Tokens](https://github.com/settings/tokens)
   - Grant it permissions to the following scopes:
@@ -82,7 +85,7 @@ First, change directories in the cloud provider you wish to use. All terraform i
 Make a copy of `.env.sample` called `.env` to keep track of these values. You can always run `source .env` to reload all environment variables in a new terminal session.
 
 ```sh
-cd terraform/gcp
+# in either terraform/aws or terraform/gcp
 cp .env.sample .env
 ```
 
@@ -98,7 +101,7 @@ export TF_VAR_github_token="<your github personal access token>"
 Run this script to create your graph and get environment variables for GraphOS:
 
 ```sh
-cd terraform/gcp
+# in either terraform/aws or terraform/gcp
 source .env
 ./create_graph.sh
 ```
