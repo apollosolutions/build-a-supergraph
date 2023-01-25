@@ -23,6 +23,7 @@ In both **subgraph-a** and **subgraph-b** repositories:
       subgraph_name: subgraph-a # change to subgraph-b in that repo
       variant: ${{ matrix.variant }}
   ```
+
 - Optional: install the Apollo Studio Github app to see Check status on PRs: https://github.com/marketplace/apollo-studio.
 
 ## Part B: Demonstrate a schema change

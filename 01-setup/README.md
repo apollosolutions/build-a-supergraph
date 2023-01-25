@@ -270,7 +270,7 @@ kubectx apollo-supergraph-k8s-prod
 kubectl port-forward service/graphql -n subgraph-a 4000:4000
 ```
 
-Then visit [http://localhost:4000/](http://localhost:4000/).
+Then visit [http://localhost:4000/](http://localhost:4000/). You've successfully deployed your subgraphs! Once you've tested the subgraph and made a few requests, close out of the port forwarding and move to the next step.
 
 ## Onward!
 
