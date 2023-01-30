@@ -83,7 +83,7 @@ ROUTER_IP=$(kubectl get ingress -n router -o jsonpath="{.*.*.status.loadBalancer
 open http://$ROUTER_IP
 ```
 
-Lastly, open up [http://localhost:9411/](http://localhost:9411/) in addition to the Router page. Upon doing so, you'll have both the Router and Zipkin pages open. Run a few requests and refresh the Zipkin list, and you should be seeing them come through! 
+Upon running the above commands, you'll have the Router page open and you can make requests against your newly deployed supergraph! 
 
 ### <image src="../images/aws.svg" height="13" style="margin:auto;" /> AWS
 
@@ -91,14 +91,11 @@ Lastly, open up [http://localhost:9411/](http://localhost:9411/) in addition to 
 kubectx apollo-supergraph-k8s-prod
 ROUTER_HOSTNAME=$(kubectl get ingress -n router -o jsonpath="{.*.*.status.loadBalancer.ingress.*.hostname}")
 open http://$ROUTER_HOSTNAME
-kubectl port-forward -n zipkin svc/zipkin 9411:9411
 ```
 
-Lastly, open up [http://localhost:9411/](http://localhost:9411/) in addition to the Router page. Upon doing so, you'll have both the Router and Zipkin pages open. 
+Upon running the above commands, you'll have the Router page open and you can make requests against your newly deployed supergraph! 
 
 **NOTE:** You may need to wait 5-10 minutes for the AWS load balancer to be available. 
-
-Run a few requests and refresh the Zipkin list, and you should be seeing them come through! 
 
 ## Onward!
 
